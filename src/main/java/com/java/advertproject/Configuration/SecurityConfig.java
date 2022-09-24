@@ -30,7 +30,8 @@ public class SecurityConfig {
         builder.userDetailsService(memberDetailService);
         authenticationManager= builder.build();
         https.csrf().disable();
-        https.authorizeRequests().and().formLogin().permitAll().and().logout().permitAll().
+        https.authorizeRequests().antMatchers("/advert/create").hasRole("USER").
+                and().formLogin().permitAll().and().logout().permitAll().
                 and().authenticationManager(authenticationManager).httpBasic();
 
         return https.build();
