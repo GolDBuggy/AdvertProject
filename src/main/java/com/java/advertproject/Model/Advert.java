@@ -1,5 +1,6 @@
 package com.java.advertproject.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,12 +33,18 @@ public class Advert {
     private BigDecimal price;
 
     @Column(name = "created_time")
+    @JsonIgnore
     private LocalDate createdTime;
 
     @Column(name = "updated_time")
+    @JsonIgnore
     private LocalDate updatedTime;
 
-    @ManyToOne
+    @Column(name = "status")
+    @JsonIgnore
+    private String status;
+
+    @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinColumn(name = "user_id")
     private User user;
 }
