@@ -44,10 +44,14 @@ public class Advert {
     @JsonIgnore
     private String status;
 
+
     @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
+
+    @OneToOne(mappedBy = "advert")
+    private Url url;
 
 
 }

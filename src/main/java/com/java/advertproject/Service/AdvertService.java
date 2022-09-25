@@ -1,8 +1,10 @@
 package com.java.advertproject.Service;
 
 import com.java.advertproject.Dto.AdvertDto;
+import com.java.advertproject.Dto.AdvertsDto;
 import com.java.advertproject.Model.Advert;
 import com.java.advertproject.Model.Approval;
+import com.java.advertproject.Model.Url;
 import com.java.advertproject.Repository.AdvertRepo;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -24,16 +26,22 @@ public class AdvertService {
     private final UserService userService;
     private final ModelMapper modelMapper;
     private final ApprovalService approvalService;
+    private final UrlService urlService;
 
     private static String DEFAULT_STATUS="Passive";
 
-
     public void createAdvert(Advert advert, Principal principal){
+        advert=setValues(advert,principal);
+        advertRepo.save(advert);
+        approvalService.save(approval(advert));
+        urlService.save(new Url(),advert);
+    }
+
+    private Advert setValues(Advert advert,Principal principal){
         advert.setStatus(DEFAULT_STATUS);
         advert.setCreatedTime(LocalDate.now());
         advert.setUser(userService.getByEmail(principal.getName()));
-        advertRepo.save(advert);
-        approvalService.save(approval(advert));
+        return advert;
     }
 
     private Approval approval(Advert advert){
@@ -50,9 +58,20 @@ public class AdvertService {
         return advertRepo.findAdvertsByUser(userService.getByEmail(principal.getName()));
     }
 
-    public List<AdvertDto> getAll(int page) {
+    public List<AdvertsDto> getAll(int page) {
         Pageable sortedByDate = PageRequest.of(page, 10, Sort.by("createdTime").descending());
         List<Advert> adverts=advertRepo.getAll(sortedByDate);
-        return adverts.stream().map(a -> modelMapper.map(a,AdvertDto.class)).collect(Collectors.toList());
+        return adverts.stream().map(a -> modelMapper.map(a, AdvertsDto.class)).collect(Collectors.toList());
+    }
+
+    public AdvertDto getById(long id) {
+        Advert advert=advertRepo.findById(id).get();
+        clickCount(advert.getUrl());
+        return modelMapper.map(advert, AdvertDto.class);
+    }
+
+    private void clickCount(Url url){
+        url.setClickCount(url.getClickCount()+1);
+        urlService.update(url);
     }
 }

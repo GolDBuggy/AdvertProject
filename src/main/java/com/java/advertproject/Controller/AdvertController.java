@@ -1,6 +1,7 @@
 package com.java.advertproject.Controller;
 
 import com.java.advertproject.Dto.AdvertDto;
+import com.java.advertproject.Dto.AdvertsDto;
 import com.java.advertproject.Model.Advert;
 import com.java.advertproject.Service.AdvertService;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,12 @@ public class AdvertController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<AdvertDto>> getAll(@RequestParam(value = "page",defaultValue = "0")int page){
+    public ResponseEntity<List<AdvertsDto>> getAll(@RequestParam(value = "page",defaultValue = "0")int page){
         return  ResponseEntity.ok(advertService.getAll(page));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AdvertDto> getById(@PathVariable long id){
+        return ResponseEntity.ok(advertService.getById(id));
     }
 }
