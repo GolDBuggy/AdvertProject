@@ -36,7 +36,7 @@ public class AdvertController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<AdvertDto>> getAll(){
-        return  ResponseEntity.ok(advertService.getAll());
+    public ResponseEntity<List<AdvertDto>> getAll(@RequestParam(value = "page",defaultValue = "0")int page){
+        return  ResponseEntity.ok(advertService.getAll(page));
     }
 }
