@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UrlDto {
-    private String advertUrl;
-    private long clickCount;
+public class UserMailDto {
+    private String email;
 
 }

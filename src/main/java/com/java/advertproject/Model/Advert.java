@@ -9,6 +9,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "advert")
@@ -34,7 +35,7 @@ public class Advert {
 
     @Column(name = "created_time")
     @JsonIgnore
-    private LocalDate createdTime;
+    private Date createdTime;
 
     @Column(name = "updated_time")
     @JsonIgnore
@@ -52,6 +53,10 @@ public class Advert {
 
     @OneToOne(mappedBy = "advert")
     private Url url;
+
+    @OneToOne(mappedBy = "advert")
+    @JsonIgnore
+    private Report report;
 
 
 }

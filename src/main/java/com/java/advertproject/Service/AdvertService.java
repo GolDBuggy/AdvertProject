@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,7 +40,7 @@ public class AdvertService {
 
     private Advert setValues(Advert advert,Principal principal){
         advert.setStatus(DEFAULT_STATUS);
-        advert.setCreatedTime(LocalDate.now());
+        advert.setCreatedTime(new Date());
         advert.setUser(userService.getByEmail(principal.getName()));
         return advert;
     }

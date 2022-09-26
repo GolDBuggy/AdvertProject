@@ -1,11 +1,14 @@
 package com.java.advertproject.Service;
 
 import com.java.advertproject.Configuration.MessageConfig;
+import com.java.advertproject.Dto.AdvertDto;
+import com.java.advertproject.Dto.AdvertSendDto;
 import com.java.advertproject.Model.Advert;
 import com.java.advertproject.Model.Approval;
 import com.java.advertproject.Repository.AdvertRepo;
 import com.java.advertproject.Repository.ApprovalRepo;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,7 @@ public class ApprovalService {
     private final ApprovalRepo approvalRepo;
     private final AdvertRepo advertRepo;
     private final RabbitTemplate rabbitTemplate;
+    private final ModelMapper modelMapper;
 
     private static Logger logger=Logger.getLogger(ApprovalService.class.getName());
 
@@ -47,8 +51,15 @@ public class ApprovalService {
         Advert advert=advertRepo.findById(id).get();
         advert.setStatus(STATUS_CONFIRM);
         advertRepo.save(advert);
-        rabbitTemplate.convertAndSend(MessageConfig.EXCHANGE,MessageConfig.ROUTING_KEY,advert);
+        sendMessage(advert);
     }
+
+    private void sendMessage(Advert advert){
+        rabbitTemplate.convertAndSend(MessageConfig.EXCHANGE,MessageConfig.ROUTING_KEY,modelMapper.map(advert, AdvertSendDto.class));
+
+    }
+
+
 
     @Transactional
     public void deleteAdvert(long id){
@@ -56,10 +67,7 @@ public class ApprovalService {
         advertRepo.deleteById(id);
     }
 
-    @RabbitListener(queues = "advert_queue")
-    public void listener(Advert advert){
-        logger.info(advert.getId()+"  "+advert.getDescription() );
-    }
+
 
 
 }

@@ -1,7 +1,11 @@
 package com.java.advertproject.Dto;
 
+import com.java.advertproject.Model.Advert;
 import com.java.advertproject.Model.Report;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -10,12 +14,12 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AdvertDto {
-
+public class AdvertSendDto {
+    private long id;
     private String title;
     private String description;
     private BigDecimal price;
-    private UserNameDto user;
+    private UserMailDto user;
     private Date createdTime;
     private UrlDto url;
     private Report report;
