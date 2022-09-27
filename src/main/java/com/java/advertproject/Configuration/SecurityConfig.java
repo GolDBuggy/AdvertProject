@@ -32,7 +32,7 @@ public class SecurityConfig {
         https.csrf().disable();
         https.authorizeRequests().antMatchers("/advert/all").permitAll().and().
                 authorizeRequests().antMatchers("/advert/create","/advert/update","/advert/my").
-                hasRole("USER").and().authorizeRequests().antMatchers("/approval/**").hasRole("ADMIN").
+                hasRole("USER").and().authorizeRequests().antMatchers("/approval/**","/report/**").hasRole("ADMIN").
                 and().formLogin().permitAll().and().logout().permitAll().
                 and().authenticationManager(authenticationManager).httpBasic();
 
